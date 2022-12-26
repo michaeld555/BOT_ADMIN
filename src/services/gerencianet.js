@@ -1,4 +1,5 @@
-import { gerencianet, keyPix } from '../utils/config.js';
+import { gerencianet, keyPix, formataValor } from '../utils/config.js';
+import { createPaymentQuery } from '../functions/query.js';
 
 const createPayment = async(name, value) => {
 
@@ -36,12 +37,22 @@ const paymentDetail = async(idPayment) => {
 
 }
 
- /* const teste = async() => {
-   const t = await createPayment('Michael', '2.50'); 
-   //console.log(t);
-   return `O texto é ${t.loc.id}`;
-} */
+const createFullPayment = async(plan, callbackQuery) => {
+  
+  const payment = await createPayment(`${callbackQuery.from.first_name}`, `${formataValor(plan.plan_price)}`);
+
+  const paymentData = await paymentDetail(payment.loc.id);
+
+  createPaymentQuery(callbackQuery, payment, plan.plan_price);
+
+  return new Promise((resolve, reject) => {
+    resolve(paymentData.qrcode)
+  });
+}
+
 
 process.on('unhandledRejection', (reason, promise) => {
     console.log(reason)
   });
+
+export { createFullPayment }

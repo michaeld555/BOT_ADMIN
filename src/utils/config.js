@@ -34,6 +34,11 @@ const formataNumero = (numero) => {
   return numeroFormatado;
 }
 
+const formataValor = (numero) => {
+  let numeroFormatado = numero.toFixed(2);
+  return numeroFormatado;
+}
 
 
-export { bot, connect, formataNumero, gerencianet, keyPix };
+
+export { bot, connect, formataNumero, gerencianet, keyPix, formataValor };

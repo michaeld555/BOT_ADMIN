@@ -1,16 +1,19 @@
 import { bot } from './src/utils/config.js';
-//import { startMessage } from './src/functions/message.js';
+import { startMessage, plansMessage } from './src/functions/message.js';
+import { plansCallback, freeTestCallback, paymentCallback } from './src/functions/callback.js';
 import { webhook } from './routes/route.js';
+import { getAllPlans } from './src/functions/query.js';
 import express from 'express';
 var app = express();
 
 // Mensagens Diretas
-bot.on('message', (msg) => {
+bot.on('message', async (msg) => {
 
   if (msg.text.startsWith('/start')) {
-    bot.sendMessage(msg.chat.id, 'Ola mundo', {});
-  }
+    startMessage(bot, msg);
+  } else if (msg.text.startsWith('/teste')) {
     
+  }
 });
 
 // Mensagens CallBack
@@ -18,11 +21,30 @@ bot.on('callback_query', (callbackQuery) => {
 
     const action = callbackQuery.data;
     
-    if (action === 'faq') {
+    if (action === 'opcoes') {
 
-      faqCallback(bot, callbackQuery);
+      plansMessage(bot, callbackQuery);
+
+    } else if(action === 'vip'){
+
+      plansCallback(bot, callbackQuery);
+
+    } else if(action === 'gratis'){
+
+      freeTestCallback(bot, callbackQuery);
 
     }
+
+    getAllPlans().then(result => {
+
+      for (let i = 0; i < result.length; i++) {
+        if(action === `month${result[i].month_duration}`){
+          paymentCallback(bot, callbackQuery, result[i]);
+          console.log(callbackQuery);
+        }
+      }
+
+    });
 
 });
 
