@@ -22,7 +22,7 @@ const options = {
     sandbox: true,
     client_id: process.env.CLIENT_ID,
     client_secret: process.env.CLIENT_SECRET,
-    pix_cert: 'C:/Users/Michae/Documents/ADMIN/cert/homologacao-429014-bot-admin.p12',
+    pix_cert: '/app/cert/homologacao-429014-bot-admin.p12',
 };
 
 const gerencianet = new Gerencianet(options);
